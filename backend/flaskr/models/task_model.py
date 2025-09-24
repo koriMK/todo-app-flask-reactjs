@@ -1,6 +1,6 @@
 from enum import Enum
-from sqlalchemy import ForeignKey, String, Enum as SaEnum
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import ForeignKey, String, Enum as SaEnum, Column, Integer, DateTime
+from sqlalchemy.orm import relationship
 from flaskr.db import db
 from datetime import datetime, timezone
 
@@ -14,18 +14,21 @@ class TaskStatus(Enum):
 class TaskModel(db.Model):
     __tablename__ = "tasks"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
-    title: Mapped[str] = mapped_column(String(40), nullable=False, index=True)
-    content: Mapped[str] = mapped_column(String(600), nullable=False)
-    status: Mapped[TaskStatus] = mapped_column(
-        SaEnum(TaskStatus), nullable=False, default=TaskStatus.PENDING
-    )
-    created_at: Mapped[datetime] = mapped_column(
-        index=True, default=lambda: datetime.now(timezone.utc)
-    )
-
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    id = Column(Integer, primary_key=True)
+    title = Column(String(40), nullable=False, index=True)
+    content = Column(String(600), nullable=False)
+    status = Column(SaEnum(TaskStatus), nullable=False, default=TaskStatus.PENDING)
+    created_at = Column(DateTime, index=True, default=lambda: datetime.now(timezone.utc))
+    
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     user = relationship("UserModel", back_populates="tasks")
+    
+    # Temporary: Keep tag_id for backward compatibility
+    tag_id = Column(Integer, ForeignKey("tags.id"), nullable=True)
+    tag = relationship("TagModel")
 
-    tag_id: Mapped[int] = mapped_column(ForeignKey("tags.id"), nullable=False)
-    tag = relationship("TagModel", back_populates="tasks")
+    # Many-to-many relationship with tags through association table
+    task_tags = relationship("TaskTagModel", back_populates="task", cascade="all, delete-orphan")
+    
+    # Many-to-many relationship with users through collaboration
+    user_tasks = relationship("UserTaskModel", back_populates="task", cascade="all, delete-orphan")

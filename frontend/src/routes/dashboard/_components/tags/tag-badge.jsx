@@ -1,10 +1,6 @@
 import { Tag } from "lucide-react";
 
-interface IProps {
-  name: string;
-}
-
-export const TagBadge = ({ name }: IProps) => {
+export const TagBadge = ({ name }) => {
   return (
     <div className="flex items-center border px-3 py-2 bg-background rounded-md">
       <Tag className="size-4 mr-2" />

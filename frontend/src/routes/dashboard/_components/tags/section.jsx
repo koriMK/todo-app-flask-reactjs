@@ -1,5 +1,5 @@
 import { useGetTagsQuery } from "@/services/queries/tags";
-import { TagBadge } from "./tag-badge";
+import { TagBadge } from "./tag-badge.jsx";
 import { LoadingState } from "./loading-state";
 
 export const TagsSection = () => {

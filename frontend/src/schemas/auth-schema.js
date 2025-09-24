@@ -15,7 +15,3 @@ const FormSchema = z.object({
 export const SignInFormSchema = FormSchema.omit({ username: true });
 
 export const CreateAccountFormSchema = FormSchema;
-
-export type TSignInFormSchema = z.infer<typeof SignInFormSchema>;
-
-export type TCreateAccountFormSchema = z.infer<typeof CreateAccountFormSchema>;

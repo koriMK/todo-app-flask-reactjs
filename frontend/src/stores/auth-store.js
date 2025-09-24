@@ -1,22 +1,12 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-type State = {
-  token: string | null;
-  isLoggedIn: boolean;
-};
-
-type Action = {
-  signIn: (token: string) => void;
-  logout: () => void;
-};
-
-export const useAuthStore = create<State & Action>()(
+export const useAuthStore = create(
   persist(
     (set) => ({
       token: null,
       isLoggedIn: false,
-      signIn: (token: string) => {
+      signIn: (token) => {
         set({ token, isLoggedIn: true });
       },
       logout: () => {

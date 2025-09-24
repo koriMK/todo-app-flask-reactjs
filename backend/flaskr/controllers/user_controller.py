@@ -53,6 +53,26 @@ class UserController:
             abort(500, message="Internal server error while creating user")
 
     @staticmethod
+    def update(data, user_id):
+        try:
+            user = db.session.execute(
+                select(UserModel).where(UserModel.id == user_id)
+            ).scalar_one()
+            
+            for key, value in data.items():
+                if key == "password":
+                    value = generate_password(value)
+                setattr(user, key, value)
+            
+            db.session.commit()
+            return user
+        except NoResultFound:
+            abort(404, message="User not found")
+        except SQLAlchemyError:
+            db.session.rollback()
+            abort(500, message="Internal server error while updating user")
+
+    @staticmethod
     def delete():
         try:
             user_id = get_jwt_identity()

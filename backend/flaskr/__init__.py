@@ -9,6 +9,8 @@ from flaskr.routes.auth_route import bp as auth_route
 from flaskr.routes.user_route import bp as user_route
 from flaskr.routes.tag_route import bp as tag_route
 from flaskr.routes.task_route import bp as task_route
+from flaskr.routes.user_task_route import blp as user_task_route
+from flaskr.routes.admin_route import blp as admin_route
 
 
 def create_app(test_config=None):
@@ -29,5 +31,7 @@ def create_app(test_config=None):
     api.register_blueprint(user_route, url_prefix="/api/v1")
     api.register_blueprint(tag_route, url_prefix="/api/v1")
     api.register_blueprint(task_route, url_prefix="/api/v1")
+    api.register_blueprint(user_task_route)
+    api.register_blueprint(admin_route)
 
     return app

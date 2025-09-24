@@ -5,6 +5,7 @@ from sqlalchemy.exc import NoResultFound, SQLAlchemyError
 from flaskr.db import db
 from flaskr.models.tag_model import TagModel
 from flaskr.models.task_model import TaskModel
+from flaskr.models.task_tag_model import TaskTagModel
 
 
 class TaskController:
@@ -12,7 +13,6 @@ class TaskController:
     def get_all_on_user():
         try:
             user_id = get_jwt_identity()
-
             return (
                 db.session.query(
                     TaskModel.id,
@@ -22,7 +22,7 @@ class TaskController:
                     TaskModel.created_at,
                     TagModel.name.label("tag_name"),
                 )
-                .where(user_id == user_id)
+                .where(TaskModel.user_id == user_id)
                 .join(TagModel, TaskModel.tag_id == TagModel.id)
                 .all()
             )

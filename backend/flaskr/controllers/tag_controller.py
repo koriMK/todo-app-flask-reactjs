@@ -30,3 +30,32 @@ class TagController:
         except SQLAlchemyError:
             db.session.rollback()
             abort(500, message="Internal server error while creating tag")
+    
+    @staticmethod
+    def update(data, tag_id):
+        try:
+            tag = db.session.execute(
+                select(TagModel).where(TagModel.id == tag_id)
+            ).scalar_one()
+            
+            for key, value in data.items():
+                setattr(tag, key, value)
+            
+            db.session.commit()
+            return tag
+        except SQLAlchemyError:
+            db.session.rollback()
+            abort(500, message="Internal server error while updating tag")
+    
+    @staticmethod
+    def delete(tag_id):
+        try:
+            tag = db.session.execute(
+                select(TagModel).where(TagModel.id == tag_id)
+            ).scalar_one()
+            
+            db.session.delete(tag)
+            db.session.commit()
+        except SQLAlchemyError:
+            db.session.rollback()
+            abort(500, message="Internal server error while deleting tag")

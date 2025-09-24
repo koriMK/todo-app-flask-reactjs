@@ -16,3 +16,15 @@ class Tags(MethodView):
     @bp.response(201)
     def post(self, data):
         return TagController.create(data)
+
+
+@bp.route("/tags/<tag_id>")
+class TagById(MethodView):
+    @bp.arguments(TagSchema)
+    @bp.response(200, TagSchema)
+    def put(self, data, tag_id):
+        return TagController.update(data, tag_id)
+    
+    @bp.response(204)
+    def delete(self, tag_id):
+        return TagController.delete(tag_id)

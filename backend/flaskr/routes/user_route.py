@@ -24,6 +24,11 @@ class UserById(MethodView):
     @bp.response(200, UserSchema)
     def get(self, user_id):
         return UserController.get_by_id(user_id)
+    
+    @bp.arguments(UserSchema)
+    @bp.response(200, UserSchema)
+    def put(self, data, user_id):
+        return UserController.update(data, user_id)
 
 
 @bp.route("/users/account")

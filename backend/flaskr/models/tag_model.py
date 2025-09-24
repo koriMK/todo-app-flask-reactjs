@@ -1,16 +1,13 @@
-from sqlalchemy import String
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import String, Column, Integer
+from sqlalchemy.orm import relationship
 from flaskr.db import db
 
 
 class TagModel(db.Model):
     __tablename__ = "tags"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(
-        String(20), nullable=False, index=True, unique=True
-    )
+    id = Column(Integer, primary_key=True)
+    name = Column(String(20), nullable=False, index=True, unique=True)
 
-    tasks = relationship(
-        "TaskModel", back_populates="tag", cascade="all, delete-orphan"
-    )
+    # Many-to-many relationship with tasks through association table
+    task_tags = relationship("TaskTagModel", back_populates="tag", cascade="all, delete-orphan")
